@@ -1,0 +1,89 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-toolbar">
+  <template>
+    <style>
+      :host {
+        background-color: #2196F3;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );  
+        display: flex;
+        flex-direction: row;
+        height: 56px;
+        left: 0;
+        opacity: 0;
+        position: absolute;
+        right: 0;
+        top: -60px;  
+      }
+
+      button {
+        background: none;
+        background-image: url( /img/exit.white.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        border: none;
+        height: 56px;
+        outline: none;
+        width: 56px;        
+      }
+
+      p {
+        color: white;
+        font-size: 20px; 
+        line-height: 56px; 
+        margin: 0 0 0 16px; 
+        padding: 0;        
+      }
+
+      .spacer {
+        flex-grow: 1;        
+      }
+    </style>
+    <p>[[title]]</p>
+    <div class="spacer"></div>
+    <button on-click="onExit"></button>
+  </template>
+  <script>
+    class Toolbar extends Polymer.Element {  
+      static get is() { return 'toodles-toolbar' }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      static get properties() {
+        return {
+          title: String
+        }
+      }
+
+      hide() {
+        TweenMax.to( this, 0.50, {
+          opacity: 0,
+          top: -60,
+          onComplete: function( element ) {
+            element.style.display = 'none';
+          },
+          onCompleteParams: [this]
+        } );
+      }
+
+      show() {
+        this.style.display = 'flex';        
+        TweenMax.to( this, 0.50, {
+          opacity: 1,
+          top: 0
+        } );
+      }
+
+      onExit( evt ) {
+        this.dispatchEvent( new CustomEvent( Toolbar.EXIT, null ) );                  
+      }
+    }
+
+    Toolbar.EXIT = 'toolbar_exit';
+
+    customElements.define( Toolbar.is, Toolbar );    
+  </script>
+</dom-module>

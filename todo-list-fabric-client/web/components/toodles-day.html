@@ -1,0 +1,107 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-day">
+  <template>
+    <style>
+      :host {
+        height: 56px;
+      }
+
+      p {
+        margin: 0;
+        padding: 0;
+        text-align: center;        
+      }
+
+      p:first-of-type {
+        font-size: 14px;
+        font-weight: 500;        
+      }
+
+      p:last-of-type {
+        color: rgba( 0, 0, 0, 0.54 );
+        font-size: 12px;
+      }
+
+      #holder {
+        border-top: solid 2px white;        
+        cursor: default;        
+        display: flex;
+        flex-direction: column;
+        height: 54px;
+        justify-content: center;        
+      }
+
+      #holder.selected {
+        border-top: 2px solid #2196F3; 
+        background-color: #E3F2FD;            
+      }
+
+      .selected {
+        color: #2196F3 !important;
+      }
+
+      .today {
+        color: #F44336 !important;  
+      }      
+    </style>
+    <div id="holder">
+      <p id="name"></p>
+      <p id="month"></p>    
+    </div>
+  </template>
+  <script>
+    class Day extends Polymer.Element {  
+      static get is() { return 'toodles-day' }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      static get properties() {
+        return {
+        	date: {
+            type: Date,
+            observer: 'onDate'
+          },
+          selected: {
+            type: Boolean,
+            observer: 'onSelected',
+            value: false
+          }
+        }
+      }
+
+      onDate( value, old ) {
+        let today = new Date();
+
+        this.$.name.innerHTML = Calendar.DAYS[value.getDay()];
+        this.$.month.innerHTML = value.getDate() + ' ' + Calendar.MONTHS[value.getMonth()]; 
+
+        if( value.getDate() == today.getDate() &&
+            value.getMonth() == today.getMonth() &&
+            value.getFullYear() == today.getFullYear() ) {
+          this.$.name.classList.add( 'today' );
+          this.$.month.classList.add( 'today' );        
+        } else {
+          this.$.name.classList.remove( 'today' );
+          this.$.month.classList.remove( 'today' );          
+        }
+      }
+
+      onSelected( value, old ) {
+        if( value ) {
+          this.$.name.classList.add( 'selected' );
+          this.$.month.classList.add( 'selected' );      
+          this.$.holder.classList.add( 'selected' );  
+        } else {
+          this.$.name.classList.remove( 'selected' );
+          this.$.month.classList.remove( 'selected' );        
+          this.$.holder.classList.remove( 'selected' );            
+        }
+      }
+    }
+
+    customElements.define( Day.is, Day );    
+  </script>
+</dom-module>

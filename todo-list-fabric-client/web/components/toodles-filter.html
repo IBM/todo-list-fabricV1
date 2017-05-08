@@ -1,0 +1,130 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-calendar.html">
+<link rel="import" href="/components/toodles-location.html">
+<link rel="import" href="/components/toodles-duration.html">
+<link rel="import" href="/components/toodles-energy.html">
+
+<dom-module id="toodles-filter">
+  <template>
+    <style>
+      :host {
+        background-color: white;
+        bottom: -235;
+        box-shadow: 0 0 5px rgba( 0, 0, 0, 0.26 );                  
+        display: none;
+        flex-direction: column;
+        left: 0;
+        position: absolute;
+        right: 0;
+      }
+    </style>
+    <toodles-calendar id="calendar"></toodles-calendar>
+    <toodles-location id="location"></toodles-location>
+    <toodles-duration id="duration"></toodles-duration>
+    <toodles-energy id="energy"></toodles-energy>    
+  </template>
+  <script>
+    class Filter extends Polymer.Element {  
+      static get is() { return 'toodles-filter' }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.places = [];
+
+        this.$.calendar.addEventListener( Calendar.CHANGE, evt => this.doChange( evt ) );
+        this.$.location.addEventListener( Location.CHANGE, evt => this.doChange( evt ) );
+        this.$.location.addEventListener( Location.DELETE, evt => this.doDelete( evt ) );        
+        this.$.duration.addEventListener( Duration.CHANGE, evt => this.doChange( evt ) );        
+        this.$.energy.addEventListener( Energy.CHANGE, evt => this.doChange( evt ) );    
+      }
+
+      set calendar( value ) {
+        this.$.calendar.selected = value;
+      }
+
+      get calendar() {
+        return this.$.calendar.selected;
+      }
+
+      set duration( value ) {
+        this.$.duration.index = value;
+      }
+
+      get duration() {
+        return this.$.duration.index;
+      }
+
+      set energy( value ) {
+        this.$.energy.index = value;
+      }
+
+      get energy() {
+        return this.$.energy.index;
+      }      
+
+      set location( value ) {
+        this.$.location.selected = value;
+      }
+
+      get location() {
+        return this.$.location.selected;
+      }
+
+      set places( value ) {
+        this.$.location.places = value;
+      }
+
+      get places() {
+        return this.$.location.places;
+      }
+
+      show() {
+        this.style.display = 'flex';
+        TweenMax.to( this, 0.50, {
+          bottom: 0,
+          opacity: 1
+        } );
+      }
+
+      hide() {
+        TweenMax.to( this, 0.50, {
+          bottom: -235,
+          opacity: 0,
+          onComplete: function( element ) {
+            element.style.display = 'none';
+          },
+          onCompleteParams: [this]
+        } );
+      }
+
+      doChange( evt ) {
+        // Left in case calendar
+        // console.log( this.$.calendar.selected );
+        console.log( {
+          location: this.$.location.selected.id,
+          duration: this.$.duration.index,
+          energy: this.$.energy.index
+        } );
+
+        this.dispatchEvent( new CustomEvent( Filter.CHANGE, {
+          detail: {
+            location: this.$.location.selected.id,
+            duration: this.$.duration.index,
+            energy: this.$.energy.index
+          }
+        } ) );         
+      } 
+
+      doDelete( evt ) {
+        this.dispatchEvent( new CustomEvent( Location.DELETE, {
+          detail: evt.detail
+        } ) );                
+      }
+    }
+
+    Filter.CHANGE = 'filter_change';
+
+    customElements.define( Filter.is, Filter );    
+  </script>
+</dom-module>

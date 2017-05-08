@@ -1,0 +1,56 @@
+<html>
+<head>
+
+<title>Toodles</title>
+
+<!-- Google Fonts -->
+<!-- Roboto -->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+
+<!-- Styles -->
+<link href="/style/toodles.css" rel="stylesheet">
+
+<!-- Polymer -->
+<!-- Web Component polyfills -->
+<script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+<!-- Components -->
+<link href="/components/toodles-authentication.html" rel="import">
+<link href="/components/toodles-toolbar.html" rel="import">
+<link href="/components/toodles-list.html" rel="import">
+<link href="/components/toodles-action.html" rel="import">
+<link href="/components/toodles-filter.html" rel="import">
+<link href="/components/toodles-message.html" rel="import">
+
+</head>
+<body>
+
+<!-- Account -->
+<toodles-authentication email="krhoyt" password="abc123"></toodles-authentication>
+
+<!-- Toolbar -->
+<toodles-toolbar title="Toodles"></toodles-toolbar>
+
+<!-- List -->
+<toodles-list></toodles-list>
+
+<!-- Actions -->
+<toodles-action></toodles-action>
+
+<!-- Filter -->
+<toodles-filter></toodles-filter>
+
+<!-- Libraries -->
+<script src="/lib/moment-2.18.0.min.js"></script>
+<script src="/lib/tweenmax-1.19.1.min.js"></script>
+<script src="/lib/uuid-1.4.7.min.js"></script>
+
+<!-- Data -->
+<script src="/script/blockchain.js"></script>
+<script src="/script/model.js"></script>
+
+<!-- Application -->
+<script src="/script/toodles.js"></script>
+
+</body>
+</html>

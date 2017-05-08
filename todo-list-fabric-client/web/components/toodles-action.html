@@ -1,0 +1,107 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-action">
+  <template>
+    <style>
+      :host {
+        align-items: center;
+        bottom: 244px; /* left in case calendar */
+        bottom: 188px;
+        display: none;
+        flex-direction: column;
+        opacity: 0;
+        right: 16px;
+        position: absolute;
+      }
+
+      #compose {
+        background-color: #F44336;
+        background-image: url( /img/add.white.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        border: none;
+        border-radius: 56px;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );
+        height: 56px;
+        outline: none;
+        width: 56px;
+      }      
+
+      #compose.todo {
+        background-image: url( /img/compose.white.svg );  
+      }      
+
+      #location {
+        background-color: #2196F3;
+        background-image: url( /img/location.white.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        border: none;
+        border-radius: 32px;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );
+        height: 32px;
+        margin-bottom: 16px;
+        opacity: 0;
+        outline: none;
+        transition-duration: 0.50s;  
+        transition-property: opacity;  
+        width: 32px;
+      }
+    </style>
+    <button id="location" on-click="onLocation"></button>
+    <button id="compose" on-mouseover="onCompose" on-click="onTask"></button>
+  </template>
+  <script>
+    class Action extends Polymer.Element {  
+      static get is() { return 'toodles-action' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.doLeave = this.doLeave.bind( this );        
+      }
+
+      hide() {
+        TweenMax.to( this, 0.50, {
+          opacity: 0,
+          onComplete: function( element ) {
+            element.style.display = 'none';
+          },
+          onCompleteParams: [this]
+        } );
+      }
+
+      show() {
+        this.style.display = 'flex';
+        this.style.opacity = 1;
+      }
+
+      doLeave( evt ) {
+        this.$.location.style.opacity = 0;
+        this.$.compose.classList.remove( 'todo' );
+        this.removeEventListener( 'mouseleave', this.doLeave );
+      }
+
+      onCompose( evt ) {
+        this.addEventListener( 'mouseleave', this.doLeave );
+        this.$.compose.classList.add( 'todo' );
+        this.$.location.style.opacity = 1;
+      }
+
+      onLocation( evt ) {
+        this.dispatchEvent( new CustomEvent( Action.CREATE_LOCATION, null ) );          
+        this.doLeave( evt );
+      }
+
+      onTask( evt ) {
+        this.dispatchEvent( new CustomEvent( Action.CREATE_TASK, null ) );          
+      }
+    }
+
+    Action.CREATE_LOCATION = 'action_create_location';
+    Action.CREATE_TASK = 'action_create_task';
+
+    customElements.define( Action.is, Action );    
+  </script>
+</dom-module>

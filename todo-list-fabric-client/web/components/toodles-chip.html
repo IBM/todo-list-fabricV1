@@ -1,0 +1,117 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-chip">
+  <template>
+    <style>
+      :host {
+        align-items: center;
+        background-color: rgba( 0, 0, 0, 0.12 );
+        border-radius: 32px;        
+        color: rgba( 0, 0, 0, 0.87 ); 
+        cursor: default;        
+        display: flex;
+        flex-direction: row;
+        font-size: 14px;
+        height: 32px;
+        line-height: 32px;
+        margin: 8px 16px 0 0;
+        padding: 0 4px 0 12px;        
+      }
+      
+      :host( .hover ) {
+        background-color: rgba( 0, 0, 0, 0.54 );
+      }
+
+      :host( .view ) {
+        padding: 0 12px 0 12px;                
+      };
+
+      button {
+        background: none;
+        background-image: url( /img/cancel.black.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        border: none;
+        border-radius: 24px;
+        height: 24px;
+        margin: 0 0 0 4px;
+        opacity: 0.54;
+        outline: none;
+        width: 24px;
+      }
+
+      button:hover {
+        background-image: url( /img/cancel.white.svg );
+        opacity: 1;
+      }
+
+      p {
+        color: rgba( 0, 0, 0, 0.87 );
+        font-size: 14px;
+        line-height: 32px;
+        margin: 0;
+        padding: 0;
+      }  
+
+      p.hover {
+        color: white;
+      }    
+    </style>
+    <p id="label"></p>
+    <button id="button" on-mouseover="onOver" on-mouseout="onOut" on-click="onClick"></button>
+  </template>
+  <script>
+    class Chip extends Polymer.Element {  
+      static get is() { return 'toodles-chip' }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      set editable( value ) {
+        if( value ) {
+          this.$.button.style.display = 'block';
+          this.classList.remove( 'view' );          
+        } else {
+          this.$.button.style.display = 'none';
+          this.classList.add( 'view' );
+        }
+      }
+
+      get editable() {
+        return this.$.button.classList.contains( 'view' );
+      }
+
+      set label( value ) {
+        this.$.label.innerHTML = value;
+      }
+
+      get label() {
+        return this.$.label.innerHTML;
+      }
+
+      onClick( evt ) {
+        this.dispatchEvent( new CustomEvent( Chip.REMOVE, {
+          detail: {
+            label: this.label
+          }
+        } ) );         
+      }
+
+      onOut( evt ) {
+        this.classList.remove( 'hover' );
+        this.$.label.classList.remove( 'hover' );
+      }
+
+      onOver( evt ) {
+        this.classList.add( 'hover' );
+        this.$.label.classList.add( 'hover' );
+      }      
+    }
+
+    Chip.REMOVE = 'chip_remove';
+
+    customElements.define( Chip.is, Chip );    
+  </script>
+</dom-module>

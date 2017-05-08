@@ -1,0 +1,251 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-location">
+  <template>
+    <style>
+      :host {
+        border-bottom: 1px solid rgba( 0, 0, 0, 0.12 );        
+        display: flex;
+        flex-direction: row;
+        height: 56px;
+        justify-content: center;        
+      }
+
+      :host > button {
+        background: none;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        border: none;
+        height: 36px;
+        margin: 10px;
+        outline: none;
+        padding: 0;
+        width: 36px;  
+      }        
+
+      #list {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        height: 56px;
+        justify-content: center;          
+      }
+
+      #list > button {
+        background: none;
+        border: none;
+        border-top: 2px solid #FFFFFF;   
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0;
+        outline: none;
+        padding: 0;
+        width: calc( 100% / 7 );          
+      }
+
+      .icon {
+        background-image: url( /img/location.black.svg );
+        opacity: 0.54;        
+      }
+
+      .inactive {
+        display: none;        
+      }
+
+      .left {
+        background-image: url( /img/arrow.left.blue.svg );        
+      }
+
+      .left:hover {
+        background-color: #2196F3;  
+        background-image: url( /img/arrow.left.white.svg );        
+      }
+
+      .right {
+        background-image: url( /img/arrow.right.blue.svg );
+      }
+
+      .right:hover {
+        background-color: #2196F3;  
+        background-image: url( /img/arrow.right.white.svg );
+      }
+
+      .selected {
+        background-color: #E3F2FD !important;  
+        border-top: 2px solid #2196F3 !important; 
+        color: #2196F3;         
+      }
+    </style>
+    <button id="left" class="icon"></button>
+    <div id="list">
+      <button class="inactive"></button>
+      <button class="inactive"></button>
+      <button class="inactive"></button>
+      <button class="inactive"></button>
+      <button class="inactive"></button>
+      <button class="inactive"></button>
+      <button class="inactive"></button>                    
+    </div>
+    <button id="right"></button>
+  </template>
+  <script>
+    class Location extends Polymer.Element {  
+      static get is() { return 'toodles-location' }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        // Bind for removal of listeners
+        // http://stackoverflow.com/questions/30446622/es6-acces-to-this-with-addeventlistener-applied-on-method
+        this.doPage = this.doPage.bind( this );
+        this.doPlace = this.doPlace.bind( this );
+
+        this.index = 0;
+        this.page = 0; 
+        this._places = [];
+      }
+
+      set places( value ) {
+        this._places = value;
+        this.update();
+      }
+
+      get places() {
+        return this._places;
+      }
+
+      get selected() {
+        return this._places[this.index];
+      }
+
+      set selected( value ) {
+        for( let p = 0; p < this._places.length; p++ ) {
+          if( this._places[p].id == value.id ) {
+            this.index = p;
+            this.update();
+            break;
+          }
+        }
+      }
+
+      filter( location ) {
+        let previous = location.index;
+
+        for( let p = 0; p < this.places.length; p++ ) {
+          if( this.places[p].name == location.name ) {
+            this.index = p;
+            break;
+          }
+        }
+
+        if( previous != this.index ) {
+          this.update();
+        }
+
+        this.dispatchEvent( new CustomEvent( Location.CHANGE, {
+          detail: location
+        } ) );              
+      }
+
+      remove( location ) {
+        this.dispatchEvent( new CustomEvent( Location.DELETE, {
+          detail: location
+        } ) );
+      }
+
+      update() {
+        // Reset buttons
+        this.$.left.removeEventListener( 'click', this.doPage );
+        this.$.left.classList.remove( 'left' );
+        this.$.left.classList.add( 'icon' );
+
+        this.$.right.removeEventListener( 'click', this.doPage );
+        this.$.right.classList.remove( 'right' );
+
+        // Remove old values
+        for( let c = 0; c < this.$.list.children.length; c++ ) {
+          this.$.list.children[c].innerHTML = '';
+          this.$.list.children[c].classList.remove( 'selected' );
+          this.$.list.children[c].classList.add( 'inactive' );
+          this.$.list.children[c].removeEventListener( 'click', this.doPlace );
+        }
+
+        let start = this.page * Location.PLACES;
+        let stop = Location.PLACES;
+
+        if( this.places.length < Location.PLACES ) {
+          stop = this.places.length;
+        } else if( this.places.length >= Location.PLACES ) {
+          if( this.page > 0 ) {
+            this.$.left.addEventListener( 'click', this.doPage );
+            this.$.left.classList.remove( 'icon' );
+            this.$.left.classList.add( 'left' );        
+          }
+
+          if( this.places.length > start + Location.PLACES ) {
+            stop = start + Location.PLACES;
+
+            this.$.right.classList.add( 'right' );
+            this.$.right.addEventListener( 'click', this.doPage );
+          } else {
+            stop = this.places.length;
+          }
+        }
+
+        for( let c = 0; c < this.$.list.children.length; c++ ) {
+          if( ( this.page * Location.PLACES ) + c < stop ) {
+            this.$.list.children[c].innerHTML = this.places[start + c].name;
+            this.$.list.children[c].setAttribute( 'data-id', this.places[start + c].id );
+            this.$.list.children[c].setAttribute( 'data-account', this.places[start + c].account );            
+            this.$.list.children[c].classList.remove( 'inactive' );
+            this.$.list.children[c].addEventListener( 'click', this.doPlace );
+
+            if( ( this.page * Location.PLACES ) + c == this.index ) {
+              this.$.list.children[c].classList.add( 'selected' );          
+            }
+          } else {
+            if( this.places.length > Location.PLACES ) {
+              this.$.list.children[c].classList.remove( 'inactive' );
+            }
+          }
+        }
+      }
+
+      doPage( evt ) {
+        if( evt.target == this.$.left ) {
+          this.page = this.page - 1;
+        }
+
+        if( evt.target == this.$.right ) {
+          this.page = this.page + 1;
+        }
+
+        this.update();
+      }
+
+      doPlace( evt ) {
+        if( evt.altKey && evt.target.getAttribute( 'data-id' ) != 'any' ) {
+          this.remove( {
+            id: evt.target.getAttribute( 'data-id' ),
+            name: evt.target.innerHTML.trim(),
+            account: evt.target.getAttribute( 'data-account' )
+          } );
+        } else {
+          this.filter( {
+            index: this.index,
+            id: evt.target.getAttribute( 'data-id' ),
+            name: evt.target.innerHTML.trim(),
+            account: evt.target.getAttribute( 'data-account' )
+          } )
+        }  
+      }
+    }
+
+    Location.CHANGE = 'location_change';
+    Location.DELETE = 'location_delete';    
+    Location.PLACES = 7;
+
+    customElements.define( Location.is, Location );    
+  </script>
+</dom-module>

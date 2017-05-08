@@ -1,0 +1,112 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-item.html">
+
+<dom-module id="toodles-list">
+  <template>
+    <style>
+      :host {
+        bottom: 228px; /* in case calendar */
+        bottom: 172px;
+        display: none;
+        left: 0;
+        overflow: auto;
+        padding: 16px 88px 0 16px;
+        position: absolute;
+        right: 0;
+        top: 56px;
+      }
+    </style>
+    <slot></slot>
+  </template>
+  <script>
+    class List extends Polymer.Element {  
+      static get is() { return 'toodles-list' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.addEventListener( 'click', evt => this.doListClick( evt ) );
+      }
+
+      set data( value ) {
+        while( this.children.length > 0 ) {
+          this.children[0].remove();
+        }
+
+        for( var v = 0; v < value.length; v++ ) {
+          this.create( value[v] );
+        }
+      }
+
+      get data() {
+        let result = [];
+
+        for( var c = 0; c < this.children.length; c++ ) {
+          result.push( this.children[c].task );
+        }
+
+        return result;
+      }
+
+      add( task ) {
+        this.create( task, true );
+
+        // Show open for detail editing
+        this.children[0].open();
+      }
+
+      create( task, first = false ) {
+        let item = document.createElement( 'toodles-item' );
+        item.addEventListener( Item.OPEN, evt => this.doItemOpen( evt ) );
+
+        if( first ) {
+          this.insertBefore( item, this.children[0] );
+        } else {
+          this.appendChild( item );          
+        }
+
+        item.task = task;          
+      }
+
+      filter( parameters ) {
+        for( let c = 0; c < this.children.length; c++ ) {
+          this.children[c].filter( parameters );
+        }
+      }
+
+      hide() {
+        TweenMax.to( this, 0.50, {
+          opacity: 0,
+          onComplete: function( element ) {
+            element.style.display = 'none';
+          },
+          onCompleteParams: [this]
+        } );
+      }
+
+      show() {
+        this.style.display = 'block';
+        TweenMax.to( this, 0.50, {
+          opacity: 1
+        } );
+      }      
+
+      doItemOpen( evt ) {
+        for( let i = 0; i < this.children.length; i++ ) {
+          if( this.children[i] != evt.target ) {
+            this.children[i].close();
+          }
+        }
+      }
+
+      doListClick( evt ) {
+        if( evt.target == this ) {
+          for( let i = 0; i < this.children.length; i++ ) {
+            this.children[i].close();
+          }
+        }
+      }
+    }
+
+    customElements.define( List.is, List );    
+  </script>
+</dom-module>

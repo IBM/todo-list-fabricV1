@@ -1,0 +1,7 @@
+{
+    "cred_filename": "blockchain_creds.json",
+    "use_events": true,
+    "keep_alive_secs": 120,
+    "port": 3000,
+    "last_startup_hash": "777cec881f3af49df0d018c76c0870319861c1f7"
+}

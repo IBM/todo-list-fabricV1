@@ -1,0 +1,80 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-remain">
+  <template>
+    <style>
+      :host {
+
+      }
+
+      p {
+        border-left: solid 1px rgba( 0, 0, 0, 0.12 );
+        border-radius: 0 2px 2px 0;          
+        color: rgba( 0, 0, 0, 0.87 ); 
+        cursor: default;
+        display: block;
+        font-size: 14px;
+        height: 48px;
+        line-height: 48px;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        width: 110px;
+      }      
+
+      p.shade {
+        background-color: #EF9A9A;
+      }
+    </style>
+    <p id="label"></p>
+  </template>
+  <script>
+    class Remain extends Polymer.Element {  
+      static get is() { return 'toodles-remain' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this._due = 0;
+      }
+
+      set due( value ) {
+        this._due = value;
+
+        if( this._due > 0 ) {
+          let end = new Date( this._due );
+          let now = new Date();
+          let difference = moment( end ).diff( now, 'days' );
+          let display = difference + ' days left';
+
+          this.$.label.classList.remove( 'shade' );
+
+          if( difference == 0 ) {
+            display = 'due today';
+            this.$.label.classList.add( 'shade' );
+          } else if( difference == 1 ) {
+            display = difference + ' day left';
+          } else if( difference < 0 ) {
+            display = Math.abs( difference ) + ' days ago';
+            this.$.label.classList.add( 'shade' );
+          }
+
+          this.$.label.innerHTML = display;        
+        }
+      }
+
+      get due() {
+        return _due;
+      }
+
+      hide() {
+        this.style.display = 'none';
+      }
+
+      show() {
+        this.style.display = 'flex';
+      }      
+    }
+
+    customElements.define( Remain.is, Remain );    
+  </script>
+</dom-module>
