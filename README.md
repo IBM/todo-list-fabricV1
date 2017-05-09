@@ -1,9 +1,19 @@
-#  Implementing Common Transactions on IBM Blockchain
+#  Implementing Common Transactions on IBM Blockchain - Hyperledger Fabric V1.
 
-This project shows how to perform traditional data store transactions on IBM Blockchain. This surfaces as a web-based, to-do list application, allowing browse, read, edit, add, and delete (BREAD) operations.
+This project is focused on helping a developer to migrate from Hyperledger Fabric V.6 to V1. It shows how to perform traditional data store transactions on IBM Blockchain. This surfaces as a web-based, to-do list application, allowing browse, read, edit, add, and delete (BREAD) operations.
 
 
 The to-do list application presented here is designed to help developers understand how common transactions needed by business processes can be adapted to use Blockchain. Blockchain != Bitcoin. It might be said that Bitcoin is the first Blockchain application. As a distributed ledger, the distinct characteristics such as decentralization, consensus, and encryption have broad-reaching implications to many business verticals including finance, transportation, health care, and others.
+
+## Application Communication Workflow
+![To-do login screen](todo-list-fabric-client/assets/comm_flow.png)
+
+* User will interact with the Todos client application, in their browser.
+* When the user performs any action, the client application calls the server application API where the registered admin interacts with the Hyperledger Blockchain Network.
+* Reading or writing the ledger is known as a proposal. This proposal is built by Todos Server (via the SDK) and then sent to a blockchain peer.
+* The peer will communicate to its Todos chaincode container. The chaincode will run/simulate the transaction. If there are no issues it will endorse the transaction and send it back to our Todos application.
+* Todos (via the SDK) will then send the endorsed proposal to the ordering service. The orderer will package many proposals from the whole network into a block. Then it will broadcast the new block to peers in the network.
+* Finally the peer will validate the block and write it to its ledger. The transaction has now taken effect and any subsequent reads will reflect this change.
 
 ## Prerequisite
 
@@ -17,7 +27,7 @@ The to-do list application presented here is designed to help developers underst
 
 ## Steps
 
-1. [Download the docker images and get the code for hyperledger fabric node sdk](#1-download-the-docker-images-and-get-the-code-for-hyperledger-fabric-node-sdk)
+1. [Download the docker images and get the code for hyperledger fabric V1 node sdk](#1-download-the-docker-images-and-get-the-code-for-hyperledger-fabric-v1-node-sdk)
 2. [Edit the configuration](#2-edit-the-configuration)
 3. [Start your network](#3-start-your-network)
 4. [Use the Node SDK](#4-use-the-node-sdk)
@@ -25,8 +35,11 @@ The to-do list application presented here is designed to help developers underst
 6. [Run the todo list fabric client](#6-run-the-todo-list-fabric-client)
 7. [Using the todo list application](#7-run-the-todo-list-application)
 
-# 1. Download the docker images and get the code for hyperledger fabric node sdk
+# 1. Download the docker images and get the code for hyperledger fabric V1 node sdk
 
+Create and start a [docker-machine](https://docs.docker.com/machine/get-started/#create-a-machine).
+
+`download-dockerimages.sh` contains the code for downloading the docker images required to setup the network for running Hyperledger Fabric V1.
 
 From your workspace, make the shell script an executable:
 
@@ -102,12 +115,12 @@ Still from your workspace, empty the example chaincode source from the fabric-sd
 rm -rf fabric-sdk-node/test/fixtures/src/github.com/example_cc/*
 ```
 
-Now copy the marbles source to that same folder:
+Now copy the todo list chaincode to the same folder:
 ```bash
 cp todo-list-fabric-server/chaincode/*
 fabric-sdk-node/test/fixtures/src/github.com/example_cc/
 ```
-
+> **Note:** If you want to run your own code on hyperledger fabric V1, just copy the chaincode code in fabric-sdk-node/test/fixtures/src/github.com/example_cc directory.
 
 # 2. Edit the configuration
 
@@ -138,9 +151,12 @@ args: ['init'],
 
 # 3. Start your network
 
+`docker-compose-networksetup.yaml` contains the configuration to setup the network.
+
 Navigate to the test/fixtures folder in the fabric-sdk-node directory and run the docker-compose file:
 
 ```bash
+cd fabric-sdk-node/test/fixtures
 docker-compose -f docker-compose-networksetup.yaml up -d
 ```
 
@@ -191,6 +207,8 @@ module.exports.END2END = {
 
 ### Create channel
 
+A Hyperledger Fabric channel is a private “subnet” of communication between two or more specific network members, for the purpose of conducting private and confidential transactions. A channel is defined by members (organizations), anchor peers per member, the shared ledger, chaincode application(s) and the ordering service node(s). Each transaction on the network is executed on a channel, where each party must be authenticated and authorized to transact on that channel. Each peer that joins a channel, has its own identity given by a membership services provider (MSP), which authenticates each peer to its channel peers and services.
+
 Now, leverage the SDK test program to create a channel named `mychannel`. From the `fabric-sdk-node` directory:
 ```bash
 node test/integration/e2e/create-channel.js
@@ -218,7 +236,7 @@ node test/integration/e2e/instantiate-chaincode.js
 
 Navigate to the root of the `todo-list-fabric-server` directory.
 
-Use an editor to open the `blockchain_cred.json` and replace all instances of `localhost` with the ip address of active docker machine.
+Use an editor to open the `blockchain_cred.json` present in config directory and replace all instances of `localhost` with the ip address of active docker machine.
 
 Install node modules in your fabric server repo.
 ```bash
@@ -230,7 +248,7 @@ Run the server:
 node server.js
 ```
 
-Issue a get request to enrollAdmin endpoint, to the Enroll the admin on chaincode:
+Issue a get request to `/enrollAdmin` endpoint, to the Enroll the admin on chaincode:
 
 You should see the following response:
 ```
@@ -274,6 +292,14 @@ You can login with any of these accounts to browse, read, edit, add, and delete 
 - To forward the to-do list item to another person, move your mouse over any item and click on the arrow icon that appears. A list of other users in the system will be presented. Select a name.
 - To logout of the application, click the icon that is a box with an arrow inside of it. This is located in the upper-righthand corner of the screen.
 - Using the above account information, log into the application again using a different account to see to-do items forwarded on to other users in the system.
+
+# Additional resources
+Following is a list of additional blockchain resources:
+* [Fundamentals of IBM Blockchain](https://www.ibm.com/blockchain/what-is-blockchain.html)
+* [Hyperledger Fabric Documentation](http://fabric-rtd.readthedocs.io/en/latest/getting_started.html)
+* [Hyperledger Fabric code on GitHub](https://github.com/hyperledger/fabric)
+* [Hyperledger Fabric Composer](https://hyperledger.github.io/composer/)
+
 
 # Troubleshooting
 
