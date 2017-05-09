@@ -370,48 +370,5 @@ module.exports = function (config_filename, logger) {
 		helper.config = config_file;												//replace old copy
 	};
 
-
-
-	// check if user has changed the settings from the default ones
-	helper.checkConfig = function () {
-		if (helper.getNetworkId() === 'FakeNetworkId') {
-			console.log('\n\n');
-			logger.warn('----------------------------------------------------------------------');
-			logger.warn('----------------------------- Hey Buddy! -----------------------------');
-			logger.warn('------------------------ It looks like you did -----------------------');
-			logger.error('------------------------------- not  --------------------------------');
-			logger.warn('------------------------- follow my instructions ---------------------');
-			logger.warn('----------------------------------------------------------------------');
-			logger.warn('Your network config JSON has a network ID of "FakeNetworkID"...');
-			logger.warn('You likely have other settings that are wrong too!');
-			logger.warn('----------------------------------------------------------------------');
-			logger.error('Fix this file: ' + helper.getNetworkCredFileName());
-			logger.warn('It must have credentials/hostnames/ports/channels/etc for YOUR network');
-			logger.warn('How/where would I get that info? Using the Bluemix service? Then look at these instructions(near the end): ');
-			logger.warn('  https://github.com/IBM-Blockchain/marbles/blob/v3.0/docs/install_chaincode.md');
-			logger.warn('----------------------------------------------------------------------');
-			console.log('\n\n');
-		}
-	};
-
-	// check if marbles UI and marbles chaincode work together
-	helper.errorWithVersions = function (v) {
-		var version = packagejson.version;
-		if (!v || !v.parsed) v = { parsed: '3.x.x' };		//default
-		if (v.parsed[0] !== version[0]) {					//only check the major version
-			console.log('\n\n');
-			logger.warn('---------------------------------------------------------------');
-			logger.warn('----------------------------- Ah! -----------------------------');
-			logger.warn('---------------------------------------------------------------');
-			logger.error('Looks like you are using an old version of marbles chaincode: v' + v.parsed);
-			logger.warn('This UI is expecting chaincode version: v' + version[0] + '.x.x');
-			logger.warn('Install and instantiate v' + version[0] + '.x.x' + ' chaincode on channel ' + helper.getChannelId());
-			logger.warn('----------------------------------------------------------------------');
-			console.log('\n\n');
-			return true;
-		}
-		return false;
-	};
-
 	return helper;
 };

@@ -37,8 +37,6 @@ The to-do list application presented here is designed to help developers underst
 
 # 1. Download the docker images and get the code for hyperledger fabric V1 node sdk
 
-Create and start a [docker-machine](https://docs.docker.com/machine/get-started/#create-a-machine).
-
 `download-dockerimages.sh` contains the code for downloading the docker images required to setup the network for running Hyperledger Fabric V1.
 
 From your workspace, make the shell script an executable:
@@ -129,19 +127,7 @@ Update the `config.json` and `instantiate-chaincode.js` files in the fabric-sdk-
 cd fabric-sdk-node/test/integration/e2e
 ```
 
-Get the ip address of active docker machine:
-```bash
-docker-machine ls
-```
-
-You should see the following:
-```bash
-Ishans-MacBook-Pro:fabric-sdk-node ishan$ docker-machine ls
-NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER        ERRORS    
-machine   *        virtualbox   Running   tcp://192.168.99.100:2376           v17.04.0-ce   
-```
-
-Use an editor to open the `config.json` and replace all instances of `grpcs` with `grpc` and all instances of `localhost` with the ip address of active docker machine i.e. `192.168.99.100`.
+Use an editor to open the `config.json` and replace all instances of `grpcs` with `grpc`.
 
 Use an editor to open `instantiate-chaincode.js` and replace line 147 with:
 ```bash
@@ -234,8 +220,6 @@ node test/integration/e2e/instantiate-chaincode.js
 # 5. Run the todo list fabric server
 
 Navigate to the root of the `todo-list-fabric-server` directory.
-
-Use an editor to open the `blockchain_cred.json` present in config directory and replace all instances of `localhost` with the ip address of active docker machine.
 
 Install node modules in your fabric server repo.
 ```bash
