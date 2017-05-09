@@ -1,0 +1,190 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-day.html">
+
+<dom-module id="toodles-calendar">
+  <template>
+    <style>
+      :host {
+        border-bottom: 1px solid rgba( 0, 0, 0, 0.12 );
+        display: flex; /* left in case calendar */
+        display: none;
+        flex-direction: row;
+        height: 56px;
+      }
+
+      button {
+        background: none;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        border: none;
+        border-radius: 2px;
+        height: 36px;
+        margin: 10px;
+        outline: none;
+        padding: 0;
+        width: 36px;
+      }
+
+      #left {
+        background-image: url( /img/arrow.left.blue.svg );
+      }
+
+      #left:hover {
+        background-color: #2196F3;  
+        background-image: url( /img/arrow.left.white.svg );        
+      }
+
+      #right {
+        background-image: url( /img/arrow.right.blue.svg );
+      }
+
+      #right:hover {
+        background-color: #2196F3;  
+        background-image: url( /img/arrow.right.white.svg );        
+      }
+
+      toodles-day {
+        flex-basis: 0;
+        flex-grow: 1;
+      }
+    </style>
+    <button id="left" on-click="onRoll"></button>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <toodles-day on-click="onSelect"></toodles-day>
+    <button id="right" on-click="onRoll"></button>
+  </template>
+  <script>
+    class Calendar extends Polymer.Element {  
+      static get is() { return 'toodles-calendar' }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this._selected = null;
+
+        this.start = new Date();
+        this.start.setDate( this.start.getDate() - 3 );
+
+        this.days = this.root.querySelectorAll( 'toodles-day' );
+
+        this.roll();
+      }
+
+      set selected( value ) {
+        if( value ) {
+          this._selected = new Date( value.getTime() );
+        } else {
+          this._selected = null;
+        }
+        
+        this.roll();
+      }
+
+      get selected() {
+        return this._selected;
+      }
+
+      roll() {
+        let day = new Date( this.start.getTime() );
+
+        for( let d = 0; d < this.days.length; d++ ) {
+          this.days[d].date = new Date( day.getTime() );
+
+          // Select if needed
+          if( this.selected ) {
+            if( day.getDate() == this.selected.getDate() &&
+                day.getMonth() == this.selected.getMonth() &&
+                day.getFullYear() == this.selected.getFullYear() ) {
+              this.days[d].selected = true;
+            } else {
+              this.days[d].selected = false;
+            }
+          }
+
+          // Increment
+          day.setDate( day.getDate() + 1 );
+        }    
+      }
+
+      onRoll( evt ) {
+        if( evt.target == this.$.right ) {
+          this.start.setDate( this.start.getDate() + 7 );
+        } else if( evt.target == this.$.left ) {
+          this.start.setDate( this.start.getDate() - 7 );
+        }
+
+        // Update display
+        this.roll();        
+      }
+
+      onSelect( evt ) {
+        // Iterate through displayed dates
+        for( let d = 0; d < this.days.length; d++ ) {
+          // Clicked element
+          if( this.days[d] == evt.target ) {
+            // Already selected so deselect
+            if( evt.target.selected ) {
+              // Clear external reference
+              this.selected = null;
+              this.days[d].selected = false;
+            } else {
+              // Not selected so select
+              // Store external reference
+              this.selected =  new Date( this.days[d].date.getTime() );
+              this.days[d].selected = true;
+            }
+          } else {
+            this.days[d].selected = false;
+          }
+        }
+
+        this.dispatchEvent( new CustomEvent( Calendar.CHANGE, {
+          detail: {
+            selected: this.selected
+          }
+        } ) );        
+      }
+
+      onStart( value, old ) {
+        this.roll();
+      }
+    }
+
+    Calendar.CHANGE = 'calendar_change';
+
+    // Days of the week
+    Calendar.DAYS = [
+      'Sunday',
+      'Monday', 
+      'Tuesday', 
+      'Wednesday', 
+      'Thursday', 
+      'Friday', 
+      'Saturday'
+    ];
+
+    // Months of the year
+    Calendar.MONTHS = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+
+    customElements.define( Calendar.is, Calendar );    
+  </script>
+</dom-module>

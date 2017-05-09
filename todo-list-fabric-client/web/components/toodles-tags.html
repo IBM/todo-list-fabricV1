@@ -1,0 +1,100 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-chip.html">
+
+<dom-module id="toodles-tags">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: row;
+        height: 48px;
+      }
+    </style>
+    <slot></slot>
+  </template>
+  <script>
+    class Tags extends Polymer.Element {  
+      static get is() { return 'toodles-tags' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.setAttribute( 'data-editable', false );
+        this.doRemove = this.doRemove.bind( this );        
+      }
+
+      set editable( value ) {
+        this.setAttribute( 'data-editable', value );
+        // this._editable = value;
+
+        for( var c = 0; c < this.children.length; c++ ) {
+          this.children[c].editable = value;
+        }
+      }
+
+      get editable() {
+        return this.getAttribute( 'data-editable' ) == 'true' ? true : false;
+      }
+
+      set list( value ) {
+        // Remove previous
+        while( this.children.length > 0 ) {
+          this.children[0].removeEventListener( Chip.REMOVE, this.doRemove );          
+          this.children[0].remove();
+        }
+
+        if( value.length > 0 ) {
+          let parts = value.split( ',' );
+          parts.sort();
+
+          // Build list
+          for( let p = 0; p < parts.length; p++ ) {
+            let chip = document.createElement( 'toodles-chip' );
+            chip.addEventListener( Chip.REMOVE, this.doRemove );
+            chip.editable = this.editable;
+            chip.label = parts[p];
+            this.appendChild( chip );
+          }
+        }
+      }
+
+      get list() {
+        let result = '';
+
+        for( var c = 0; c < this.children.length; c++ ) {
+          result = result + this.children[c].label + ',';
+        }
+
+        return result.substring( 0, result.length - 1 );
+      }
+
+      doRemove( evt ) {
+        for( let t = 0; t < this.list.length; t++ ) {
+          if( this.list[t] == evt.detail.label ) {
+            this.list.splice( t, 1 );
+            break;
+          }
+        }
+
+        evt.target.remove();
+
+        this.dispatchEvent( new CustomEvent( Tags.CHANGE, {
+          detail: {
+            tags: this.list
+          }
+        } ) );          
+      }
+
+      hide() {
+        this.style.display = 'none';
+      }
+
+      show() {
+        this.style.display = 'flex';
+      }      
+    }
+
+    Tags.CHANGE = 'tags_change';
+
+    customElements.define( Tags.is, Tags );    
+  </script>
+</dom-module>

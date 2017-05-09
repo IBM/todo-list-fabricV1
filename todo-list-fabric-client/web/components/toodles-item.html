@@ -1,0 +1,467 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-complete.html">
+<link rel="import" href="/components/toodles-tags.html">
+<link rel="import" href="/components/toodles-remain.html">
+<link rel="import" href="/components/toodles-due.html">
+<link rel="import" href="/components/toodles-combo.html">
+<link rel="import" href="/components/toodles-menu.html">
+
+<dom-module id="toodles-item">
+  <template>
+    <style>
+      :host {
+        background-color: white;  
+        border-radius: 2px;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );  
+        display: flex;
+        flex-direction: column;
+        margin: 0 0 16px 0;
+      }
+
+      input {
+        background: none;
+        border: none;
+        color: rgba( 0, 0, 0, 0.87 );   
+        flex-grow: 1;
+        font-size: 14px;  
+        line-height: 48px;
+        margin: 0;
+        outline: 0;
+        padding: 0;        
+      }
+
+      textarea {
+        border: none;
+        color: rgba( 0, 0, 0, 0.87 );
+        flex-grow: 1; 
+        height: 96px;
+        outline: none;
+        font-size: 14px;
+        padding-top: 15px;
+      }
+
+      #duration {
+        border-left: solid 1px rgba( 0, 0, 0, 0.12 );
+      }
+
+      #energy {
+        border-left: solid 1px rgba( 0, 0, 0, 0.12 );
+      }
+
+      #forward {
+        background-image: url( /img/forward.black.svg );
+      }            
+
+      #location {
+        border-left: solid 1px rgba( 0, 0, 0, 0.12 );
+      }
+
+      #options {
+        border-left: solid 1px rgba( 0, 0, 0, 0.12 );                
+        display: none;
+        flex-direction: row;
+      }
+
+      #options div {
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        height: 48px;
+        opacity: 0.54;
+        width: 48px;        
+      }
+
+      #options div:hover {
+        opacity: 1;
+      }
+
+      #summary {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        height: 48px;        
+      }
+
+      #trash {
+        background-image: url( /img/trash.black.svg );
+      }            
+
+      .details {
+        display: none;
+        flex-direction: column;        
+      }
+
+      .bar {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .label {
+        border: none;
+        color: rgba( 0, 0, 0, 0.87 );
+        cursor: default;
+        flex-grow: 1;
+        font-size: 16px;
+        line-height: 48px;
+        margin: 0 16px 0 0;
+        outline: none;
+        padding: 0;        
+      }
+
+      .notes {
+        background-image: url( /img/note.black.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        height: 48px;
+        opacity: 0.54;
+        width: 48px;        
+      }
+
+      .row {
+        border-top: solid 1px rgba( 0, 0, 0, 0.12 );  
+        display: flex;
+        flex-direction: row;
+      }
+
+      .tags {
+        background-image: url( /img/offer.black.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        height: 48px;
+        opacity: 0.54;
+        width: 48px;        
+      }
+    </style>
+    <div class="bar">
+      <div id="summary">
+        <toodles-complete id="complete" on-complete_change="onCompleteChange"></toodles-complete>
+        <input 
+          id="label" 
+          class="label" 
+          on-focus="onLabelFocus" 
+          on-blur="onLabelBlur" 
+          on-keypress="onLabelKey">
+        <toodles-tags id="summary_tags" on-tags_change="onTagsChange"></toodles-tags>
+        <toodles-remain id="remain"></toodles-remain>
+      </div>    
+      <div id="options">
+        <div id="trash" on-click="onTrash"></div>        
+        <div id="forward" on-click="onForward"></div>
+      </div>
+    </div>
+    <div id="details" class="details">
+      <div class="row">
+        <div class="tags"></div>
+        <toodles-tags id="detail_tags" on-tags_change="onTagsChange"></toodles-tags>
+        <input id="add_tag" on-keypress="onTagsKey">
+      </div>
+      <div class="row">
+        <toodles-due id="due" on-due_change="onDue"></toodles-due>
+        <toodles-combo 
+          id="location"          
+          icon="/img/location.black.svg"
+          on-combo_change="onLocation">
+        </toodles-combo>
+        <toodles-combo 
+          id="duration" 
+          icon="/img/duration.black.svg"
+          on-combo_change="onDuration">    
+        </toodles-combo>
+        <toodles-combo 
+          id="energy" 
+          icon="/img/energy.black.svg" 
+          on-combo_change="onEnergy">
+        </toodles-combo>        
+      </div>
+      <div class="row">
+        <div class="notes"></div>
+        <textarea id="notes" placeholder="Notes" on-blur="onNotes"></textarea>
+      </div>
+    </div>
+  </template>
+  <script>
+    class Item extends Polymer.Element {  
+      static get is() { return 'toodles-item' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        
+        this._task = null;
+        this.opened = false;
+        
+        this.$.detail_tags.editable = true;
+
+        this.addEventListener( 'mouseover', evt => this.doOver( evt ) );
+        this.addEventListener( 'mouseleave', evt => this.doLeave( evt ) );
+      }
+
+      set task( value ) {
+        this._task = Object.assign( {}, value );
+
+        // Completed check box
+        this.$.complete.selected = this._task.complete;
+
+        // Adjust opacity for completed
+        if( this._task.complete ) {
+          this.$.summary.style.opacity = 0.38;
+          this.$.remain.hide();
+        } else {
+          this.$.summary.style.opacity = 1;
+          this.$.remain.show();
+        }
+
+        // Name
+        this.$.label.value = this._task.name;
+
+        // Tags (summary and editable detail list)
+        this.$.summary_tags.list = this._task.tags;
+        this.$.detail_tags.list = this._task.tags;
+
+        // Time until due
+        if( this._task.due > 0 ) {
+          this.$.remain.due = this._task.due;
+        } else {
+          this.$.remain.hide();
+        }
+
+        // Due date proper
+        this.$.due.value = this._task.due;        
+
+        // Location
+        this.$.location.items = model.locations;
+        this.$.location.selected = this._task.location;                
+        
+        // Duration
+        this.$.duration.items = Model.DURATION;
+        this.$.duration.selected = this._task.duration;
+
+        // Energy
+        this.$.energy.items = Model.ENERGY;
+        this.$.energy.selected = this._task.energy;
+
+        // Notes
+        this.$.notes.value = this._task.notes;        
+      }
+
+      get task() {
+        return this._task;
+      }
+
+      close() {
+        this.$.label.blur();
+        this.$.options.style.display = 'none';
+        this.$.details.style.display = 'none';
+        this.$.summary_tags.show();
+
+        if( this.task.complete ) {
+          this.$.summary.style.opacity = 0.38;
+          this.$.remain.hide();
+        } else {
+          this.$.summary.style.opacity = 1;
+
+          if( this.task.due > 0 ) {
+            this.$.remain.show();
+          }
+        }
+
+        this.opened = false;
+      }
+
+      filter( parameters ) {
+        this.show();
+
+        if( parameters.location != 'any' ) {
+          if( this.task.location != parameters.location ) {
+            this.hide();
+          }          
+        }
+
+        if( parameters.duration > 0 ) {
+          if( this.task.duration != parameters.duration ) {
+            this.hide();
+          }          
+        }
+
+        if( parameters.energy > 0 ) {
+          if( this.task.energy != parameters.energy ) {
+            this.hide();
+          }          
+        }
+      }
+
+      hide() {
+        this.style.display = 'none';
+      }
+
+      open() {
+        this.$.summary.style.opacity = 1;
+        this.$.summary_tags.hide();
+        this.$.remain.hide();
+        this.$.options.style.display = 'flex';                        
+        this.$.details.style.display = 'flex';        
+
+        this.opened = true;
+      }
+
+      show() {
+        this.style.display = 'flex';
+      }
+
+      doLeave( evt ) {
+        if( !this.opened ) {
+          this.$.options.style.display = 'none';
+        }        
+      }
+
+      doOver( evt ) {
+        this.$.options.style.display = 'flex';        
+      }
+
+      doPeer( evt ) {
+        let clone = Object.assign( {}, this.task );
+        clone.account = evt.detail.id;
+        clone.location = 'any';
+
+        model.taskEdit( clone );
+
+        // TODO: Fully destroy reference
+        evt.target.remove();        
+        this.remove();        
+      }
+
+      onCompleteChange( evt ) {
+        this.task.complete = evt.detail.selected;
+        model.taskEdit( this.task );
+
+        if( this.task.complete ) {
+          if( !this.opened ) {
+            this.$.summary.style.opacity = 0.38;
+            this.$.remain.hide();
+          }
+        } else {
+          this.$.summary.style.opacity = 1;
+
+          if( !this.opened ) {
+            this.$.remain.show();
+          }
+        }        
+      }
+
+      onForward( evt ) {
+        let menu = document.querySelector( 'toodles-menu' );
+        let position = Toodles.getPosition( evt.target );
+
+        if( menu ) {
+          menu.remove();
+        }
+
+        menu = document.createElement( 'toodles-menu' );
+        menu.addEventListener( Menu.SELECT, evt => this.doPeer( evt ) );
+        menu.style.width = '250px';
+        menu.style.left = ( position.x - 194 ) + 'px';
+        // TODO: Better positioning
+        // TODO: Better dismissal
+        // Menus have 8 pixels at the top
+        menu.style.top = ( position.y - 8 ) + 'px';
+        menu.items = model.peers;
+        document.body.appendChild( menu );
+      }
+
+      onLabelBlur( evt ) {
+        if( this.$.label.value.trim() != this.task.name.trim() ) {
+          this.task.name = this.$.label.value.trim();
+          model.taskEdit( this.task );
+        }
+      }
+
+      onLabelFocus( evt ) {
+        this.open();
+        this.dispatchEvent( new CustomEvent( Item.OPEN, null ) );
+      }
+
+      onLabelKey( evt ) {
+        if( evt.keyCode == 13 ) {
+          if( this.$.label.value.trim() != this.task.name.trim() ) {
+            this.task.name = this.$.label.value.trim();
+            model.taskEdit( this.task );
+          }
+        }
+      }
+
+      onTagsChange( evt ) {
+        this.task.tags = evt.detail.tags;
+        this.$.summary_tags.list = this.task.tags;
+
+        model.taskEdit( this.task );        
+      }
+
+      onTagsKey( evt ) {
+        if( evt.keyCode == 13 ) {
+          if( this.task.tags.length > 0 ) {
+            this.task.tags = this.task.tags + ',' + this.$.add_tag.value.trim();
+          } else {
+            this.task.tags = this.$.add_tag.value.trim();
+          }
+
+          model.taskEdit( this.task );
+
+          this.$.summary_tags.list = this.task.tags;          
+          this.$.detail_tags.list = this.task.tags;
+
+          this.$.add_tag.value = '';
+        }
+      }
+
+      onTrash( evt ) {
+        model.taskDelete( this.task );
+        this.remove();
+      }
+
+      onDue( evt ) {
+        if( this.task.due != evt.detail.due ) {
+          this.task.due = evt.detail.due;
+          this.$.remain.due = this.task.due;
+          model.taskEdit( this.task );
+        }
+      }
+
+      onDuration( evt ) {
+        let duration = parseInt( evt.detail.item.id );
+
+        if( this.task.duration != duration ) {
+          this.task.duration = duration;
+          model.taskEdit( this.task );                  
+        }
+      }
+
+      onEnergy( evt ) {
+        let energy = parseInt( evt.detail.item.id );
+
+        if( this.task.energy != energy ) {
+          this.task.energy = energy;
+          model.taskEdit( this.task );        
+        }
+      }
+
+      onLocation( evt ) {
+        if( this.task.location != evt.detail.item.id ) {
+          this.task.location = evt.detail.item.id;
+          model.taskEdit( this.task );        
+        }
+      }      
+
+      onNotes( evt ) {
+        if( this.task.notes != this.$.notes.value ) {
+          this.task.notes = this.$.notes.value;
+          model.taskEdit( this.task );     
+        }   
+      }            
+    }
+
+    Item.OPEN = 'item_open';
+
+    customElements.define( Item.is, Item );    
+  </script>
+</dom-module>

@@ -1,0 +1,116 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-duration">
+  <template>
+    <style>
+      :host {
+        border-bottom: 1px solid rgba( 0, 0, 0, 0.12 );        
+        display: flex;
+        flex-direction: row;
+        height: 56px;
+        justify-content: center;
+      }
+
+      button {
+        background: none;
+        border: none;
+        border-top: solid 2px white;
+        font-size: 14px;
+        font-weight: 500;  
+        height: 56px;
+        margin: 0;
+        outline: none;
+        padding: 0;
+        width: calc( 100% / 7 );  
+      }
+
+      button.selected {
+        background-color: #E3F2FD;  
+        border-top: 2px solid #2196F3; 
+        color: #2196F3; 
+      }
+
+      #list {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        height: 56px;
+        justify-content: center;          
+      }
+
+      .icon {
+        background-image: url( /img/duration.black.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;  
+        height: 56px;
+        opacity: 0.54;
+        width: 56px;        
+      }
+
+      .spacer {
+        height: 56px;
+        width: 56px;        
+      }
+    </style>
+    <div class="icon"></div>
+    <div id="list">
+      <button on-click="onSelect">Any</button>
+      <button on-click="onSelect">&lt; 30 mins.</button>
+      <button on-click="onSelect">30 - 60 mins.</button>
+      <button on-click="onSelect">1 - 2 hrs.</button>
+      <button on-click="onSelect">2 - 4 hrs.</button>
+      <button on-click="onSelect">&gt; 4 hrs.</button>    
+    </div>
+    <div class="spacer"></div>
+  </template>
+  <script>
+    class Duration extends Polymer.Element {  
+      static get is() { return 'toodles-duration' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.index = 0;
+      }
+
+      set index( value ) {
+        for( let c = 0; c < this.$.list.children.length; c++ ) {
+          if( c == value ) {
+            this.$.list.children[c].classList.add( 'selected' );
+          } else {
+            this.$.list.children[c].classList.remove( 'selected' );
+          }
+        }
+      }
+
+      get index() {
+        for( let c = 0; c < this.$.list.children.length; c++ ) {
+          if( this.$.list.children[c].classList.contains( 'selected' ) ) {
+            return c;
+          }
+        }
+      }
+
+      onSelect( evt ) {
+        let buttons = this.root.querySelectorAll( 'button' );
+
+        for( let b = 0; b < buttons.length; b++ ) {
+          if( buttons[b] == evt.target ) {
+            this.index = b;
+            break;
+          }
+        }        
+
+        this.dispatchEvent( new CustomEvent( Duration.CHANGE, {
+          detail: {
+            index: this.index
+          }
+        } ) );               
+      }
+    }
+
+    Duration.CHANGE = 'duration_change';
+
+    customElements.define( Duration.is, Duration );    
+  </script>
+</dom-module>

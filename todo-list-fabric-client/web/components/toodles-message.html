@@ -1,0 +1,125 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-input.html">
+
+<dom-module id="toodles-message">
+  <template>
+    <style>
+      :host {
+        background-color: white;
+        border-radius: 2px;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );          
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        padding: 24px 24px 0px 24px;
+        position: absolute;
+        width: 268px;
+      }
+
+      button {
+        background: none;
+        border: none;
+        color: #2196F3;
+        font-size: 14px;
+        font-weight: 500;
+        height: 36px;
+        margin: 0 0 0 8px;
+        outline: none;
+        padding: 0 8px 0 8px;
+        text-transform: uppercase;
+      }
+
+      #title {
+        color: rgba( 0, 0, 0, 0.87 );
+        font-size: 20px;
+        font-weight: 500;
+        margin: 0;
+        padding: 0;
+      }
+
+      .buttons {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        height: 52px;
+        justify-content: flex-end;
+      }
+    </style>
+    <p id="title">Add a location</p>
+    <toodles-input id="field" on-textfield_enter="onSubmit"></toodles-input>
+    <div class="buttons">
+      <button on-click="onCancel">Cancel</button>
+      <button on-click="onOk">OK</button>
+    </div>
+  </template>
+  <script>
+    class Message extends Polymer.Element {  
+      static get is() { return 'toodles-message' }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.$.field.placeholder = 'Location';
+        this.$.field.return = true;
+        this.$.field.focus();
+      }      
+
+      hide() {
+        this.style.display = 'none';
+      }
+
+      shake() {
+        TweenMax.fromTo( this, 0.5, {
+          x: -10
+        }, {
+          x: 10, 
+          ease: RoughEase.ease.config( {
+            strength: 1, 
+            points: 10, 
+            template: Linear.easeNone, 
+            randomize: false
+          } ), 
+          clearProps: 'x'
+        } );
+      }
+
+      show() {
+        this.style.left = ( ( window.innerWidth - this.clientWidth ) / 2 ) + 'px';
+        this.style.top = ( ( window.innerHeight - this.clientHeight ) / 2 ) + 'px';        
+        this.style.opacity = 1;
+      }
+
+      submit() {
+        if( this.$.field.value.trim().length > 0 ) {
+          this.$.field.spinner = true;
+          this.dispatchEvent( new CustomEvent( Message.OK, {
+            detail: {
+              value: this.$.field.value
+            }
+          } ) );        
+        } else {
+          this.$.field.spinner = false;
+          this.shake();
+        }
+      }
+
+      onCancel( evt ) {
+        this.$.field.spinner = false;
+        this.dispatchEvent( new CustomEvent( Message.CANCEL, null ) );          
+      }
+
+      onOk( evt ) {
+        this.submit();
+      }
+
+      onSubmit( evt ) {
+        this.submit();
+      }
+    }
+
+    Message.CANCEL = 'message_cancel';
+    Message.OK = 'message_ok';
+
+    customElements.define( Message.is, Message );    
+  </script>
+</dom-module>

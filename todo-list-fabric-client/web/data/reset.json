@@ -1,0 +1,117 @@
+{
+  "accounts": [
+    {
+      "id": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "first": "Kevin",
+      "last": "Hoyt",
+      "name": "krhoyt",
+      "password": "abc123"
+    }, {
+      "id": "aaad28f4-89c5-453e-bc53-d10905ac94f3",
+      "first": "Abtin",
+      "last": "Forouzandeh",
+      "name": "abtin",
+      "password": "abc123"
+    }, {
+      "id": "01b5b881-f017-4053-80da-354d2dcf20f7",
+      "first": "Peter",
+      "last": "Moskovits",
+      "name": "peter",
+      "password": "abc123"
+    }
+  ],
+  "locations": [
+    {
+      "id": "281efe43-eb66-4871-9875-bc2f9e200435",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "name": "Home"
+    }, {
+      "id": "e9693fca-ad33-4aa1-9614-4127563e7dd5",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "name": "Work"
+    }, {
+      "id": "99a8e5d9-79b9-4d06-8abe-9f534b74037c",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "name": "Cave"
+    }, {
+      "id": "b5d03c56-78b4-44cf-883b-3696ae07aa9b",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "name": "Garage"
+    }, {
+      "id": "fa48d454-09cf-4216-a17a-07b317648433",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "name": "TKD"
+    }, {
+      "id": "23a91616-78a0-498c-853a-64e979238a0a",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "name": "Groceries"
+    }, {
+      "id": "c4db4872-225f-46f1-915e-c994e8f20aaa",
+      "account": "aaad28f4-89c5-453e-bc53-d10905ac94f3",
+      "name": "Home"
+    }, {
+      "id": "a37c44b8-15b5-4fbf-8c6f-69818fc5bfdc",
+      "account": "aaad28f4-89c5-453e-bc53-d10905ac94f3",
+      "name": "Work"
+    }, {
+      "id": "596402fb-9810-4c74-85fa-d396ccc28dc0",
+      "account": "01b5b881-f017-4053-80da-354d2dcf20f7",
+      "name": "Home"
+    }, {
+      "id": "27a5b073-e8f5-40d2-bf94-744006f6088d",
+      "account": "01b5b881-f017-4053-80da-354d2dcf20f7",
+      "name": "Work"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "826465cd-4ab7-40a6-8af1-01da16131279",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12",
+      "due": 1491026400000,
+      "location": "e9693fca-ad33-4aa1-9614-4127563e7dd5",
+      "duration": 5,
+      "energy": 2,
+      "tags": "awesome,journey",
+      "notes": "Because Blockchain will revolutionize how you do business.",
+      "complete": false,
+      "name": "Chain All The Things",
+      "created": 1490464725276
+    }, {
+      "id": "3c3957e3-076b-4703-9b7a-0490bfd2fd45",
+      "account": "4b56f041-eec7-4247-8ae5-55380e6c9a12", 
+      "due": 1490421600000,
+      "location": "281efe43-eb66-4871-9875-bc2f9e200435",
+      "duration": 1,
+      "energy": 2,
+      "tags": "repair",
+      "notes": "Because she clogged it with something.",
+      "complete": true,
+      "name": "Fix Paige's Toilet",
+      "created": 1490464681491
+    }, {
+      "id": "9069ee37-3d7c-42ae-b861-059d353f4878",
+      "account": "aaad28f4-89c5-453e-bc53-d10905ac94f3",
+      "due": 1491026400000,
+      "location": "a37c44b8-15b5-4fbf-8c6f-69818fc5bfdc",
+      "duration": 1,
+      "energy": 0,
+      "tags": "business",
+      "notes": "Because 37 meetings in a week just is not enough.",
+      "complete": false,
+      "name": "Schedule More Meetings",
+      "created": 1490464573737
+    }, {
+      "id": "7d2e88af-da34-4fea-8d3c-91faed1f8425",
+      "account": "01b5b881-f017-4053-80da-354d2dcf20f7",
+      "due": 1491026400000,
+      "location": "596402fb-9810-4c74-85fa-d396ccc28dc0",
+      "duration": 4,
+      "energy": 2,
+      "tags": "food,friends,happiness",
+      "notes": "Hungarian sponge cake layered with chocolate buttercream and topped with caramel.",
+      "complete": false,
+      "name": "Bake Dobos Torte",
+      "created": 1490464345821
+    }
+  ]
+}

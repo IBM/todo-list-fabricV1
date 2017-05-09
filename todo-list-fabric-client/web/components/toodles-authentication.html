@@ -1,0 +1,198 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/components/toodles-check.html">
+<link rel="import" href="/components/toodles-input.html">
+
+<dom-module id="toodles-authentication">
+  <template>
+    <style>
+      :host {
+        align-items: center;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: center;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+
+      button {
+        background: none;
+        background-color: #2196F3;
+        border: none;
+        border-radius: 2px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        height: 36px;
+        margin: 18px 0 18px 0;
+        padding: 0 16px 0 16px;
+        outline: none;
+        text-transform: uppercase;
+      }
+
+      button.disabled {
+        background-color: rgba( 0, 0, 0, 0.12 );
+        color: rgba( 0, 0, 0, 0.26 );
+      }
+
+      button.loading {
+        background-image: url( /img/loading.white.svg );
+        background-position: 16px center;
+        background-repeat: no-repeat;
+        background-size: 20px;
+      }
+
+      .create {
+        color: #2196F3;
+        cursor: default;
+        font-size: 14px;        
+      }
+
+      .dialog {
+        background-color: white;
+        border-radius: 2px;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );    
+        display: flex;
+        flex-direction: column;
+        padding: 0 16px 16px 16px;
+        width: 268px;
+      }
+
+      .photo {
+        background-image: url( /img/ibm.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 72px;
+        height: 56px;
+        margin: 16px 10px 16px 10px;
+      }
+    </style>
+    <div class="dialog">
+      <div class="photo" on-click="onReset"></div>
+      <toodles-input id="username"></toodles-input>
+      <toodles-input id="password"></toodles-input>
+      <button id="signin" on-click="onSignIn">Sign In</button>
+      <toodles-check id="check"></toodles-check>
+    </div>
+    <p class="create" on-click="onCreate">Create an account</p>
+  </template>
+  <script>
+    class Authentication extends Polymer.Element {  
+      static get is() { return 'toodles-authentication' }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.id = null;
+
+        this.$.username.placeholder = 'Username';
+        this.$.username.value = 'krhoyt';
+
+        this.$.password.placeholder = 'Password';
+        this.$.password.type = 'password';
+        this.$.password.return = true;
+        this.$.password.addEventListener( TextField.ENTER, evt => this.doPassword( evt ) );
+
+        this.$.check.label = 'Stay signed in';
+      }
+
+      set username( value ) {
+        this.$.username.value = value;
+      }
+
+      get username() {
+        return this.$.username.value;
+      }
+
+      set loading( value ) {
+        if( value ) {
+          this.$.signin.classList.add( 'loading' );
+        } else {
+          this.$.signin.classList.remove( 'loading' );
+        }
+      }
+
+      get loading() {
+        return this.$.signin.classList.contains( 'loading' );
+      }
+
+      set password( value ) {
+        this.$.password.value = value;
+      }
+
+      get password() {
+        return this.$.password.value;
+      }
+
+      hide() {
+        TweenMax.to( this, 0.50, {
+          opacity: 0,
+          onComplete: function( element ) {
+            element.style.display = 'none';
+            element.password = '';
+            element.loading = false;
+          },
+          onCompleteParams: [this]
+        } );
+      }
+
+      shake() {
+        TweenMax.fromTo( this, 0.5, {
+          x: -10
+        }, {
+          x: 10, 
+          ease: RoughEase.ease.config( {
+            strength: 1, 
+            points: 10, 
+            template: Linear.easeNone, 
+            randomize: false
+          } ), 
+          clearProps: 'x'
+        } );
+      }
+
+      show() {
+        this.style.display = 'flex';        
+        TweenMax.to( this, 0.50, {
+          opacity: 1
+        } );
+      }
+
+      submit() {
+        this.loading = true;        
+        this.dispatchEvent( new CustomEvent( Authentication.SIGN_IN, {
+          detail: {
+            username: this.username,
+            password: this.password
+          }
+        } ) );        
+      }
+
+      onCreate( evt ) {
+        console.log( 'Create account.' );
+      }
+
+      doPassword( evt ) {
+        this.submit();
+      }
+
+      onReset( evt ) {
+        if( evt.altKey ) {
+          this.dispatchEvent( new CustomEvent( Authentication.RESET, null ) );          
+        }
+      }
+
+      onSignIn( evt ) {
+        this.submit();
+      }   
+    }
+
+    Authentication.SIGN_IN = 'authentication_sign_in';
+    Authentication.RESET = 'authentication_reset';    
+
+    customElements.define( Authentication.is, Authentication );    
+  </script>
+</dom-module>

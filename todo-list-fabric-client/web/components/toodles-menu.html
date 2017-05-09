@@ -1,0 +1,74 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-menu">
+  <template>
+    <style>
+      :host {
+        background-color: #FAFAFA;
+        border-radius: 2px;
+        box-shadow: 0 2px 5px rgba( 0, 0, 0, 0.26 );          
+        display: flex;
+        flex-direction: column;
+        max-height: 240px;
+        overflow: auto;
+        position: absolute;
+      }
+
+      ::slotted( p ) {
+        color: rgba( 0, 0, 0, 0.87 );
+        cursor: default;
+        flex-basis: 0;
+        flex-grow: 1;
+        font-size: 14px;
+        line-height: 48px;
+        margin: 0;
+        padding: 0 48px 0 48px;
+      }
+
+      ::slotted( p:first-of-type ) {
+        margin: 8px 0 0 0;
+      }
+
+      ::slotted( p:hover ) {
+        background-color: rgba( 0, 0, 0, 0.12 );
+      }
+
+      ::slotted( p:last-of-type ) {
+        margin: 0 0 8px 0;
+      }      
+    </style>
+    <slot></slot>
+  </template>
+  <script>
+    // TODO: Eliminate menu regardless of click target
+    class Menu extends Polymer.Element {  
+      static get is() { return 'toodles-menu' }
+
+      connectedCallback() {
+        super.connectedCallback();
+      }
+
+      set items( value ) {
+        for( let v = 0; v < value.length; v++ ) {
+          let item = document.createElement( 'p' );
+          item.setAttribute( 'data-id', value[v].id );
+          item.addEventListener( 'click', evt => this.doClick( evt ) );
+          item.innerHTML = value[v].name;
+          this.appendChild( item );
+        }
+      }
+
+      doClick( evt ) {
+        this.dispatchEvent( new CustomEvent( Menu.SELECT, {
+          detail: {
+            id: evt.target.getAttribute( 'data-id' )
+          }
+        } ) );         
+      }
+    }
+
+    Menu.SELECT = 'menu_select';
+
+    customElements.define( Menu.is, Menu );    
+  </script>
+</dom-module>

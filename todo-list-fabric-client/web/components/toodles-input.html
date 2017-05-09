@@ -1,0 +1,165 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-input">
+  <template>
+    <style>
+      :host {
+        display: block;
+        height: 72px;
+        position: relative;
+      }
+
+      input {
+        border: none;
+        font-size: 16px;
+        margin: 0;
+        outline: none;
+        padding: 0;
+        width: 100%;        
+      }
+
+      span {
+        bottom: 16px;
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;        
+      }
+
+      #divider {
+        background-color: rgba( 0, 0, 0, 0.12 );
+        bottom: 8px;
+        height: 1px;
+        left: 0;
+        position: absolute;
+        right: 0;        
+      }
+
+      #divider.invalid {
+        background-color: #F44336;        
+      }
+
+      #divider.selected {
+        background-color: #2196F3;
+        height: 2px;        
+      }
+
+      #label {
+        font-size: 12px;
+        margin: 16px 0 0 0;
+        padding: 0;
+        position: absolute;        
+      }
+
+      #label.selected {
+        color: #2196F3;  
+      }
+
+      #spinner {
+        background-image: url( /img/loading.blue.svg );
+        background-position: right center;
+        background-repeat: no-repeat;
+        background-size: 20px;        
+        bottom: 8px;
+        display: none;
+        height: 36px;
+        right: 0;
+        position: absolute;
+        width: 36px;
+      }
+    </style>
+    <p id="label"></p>
+    <div id="divider"></div>
+    <span>
+      <input id="field" on-focus="onFocus" on-blur="onBlur" on-keypress="onKey">
+    </span>
+    <div id="spinner"></div>
+  </template>
+  <script>
+    class TextField extends Polymer.Element {  
+      static get is() { return 'toodles-input' }
+
+      connectedCallback() {
+        super.connectedCallback();
+
+        this.placeholder = 'Label';
+        this.type = 'text';
+        this.content = null;
+
+        this.setAttribute( 'data-return', false );
+      }
+
+      set placeholder( value ) {
+        this.$.label.innerHTML = value;
+      }
+
+      get placeholder() {
+        return this.$.label.innerHTML.trim();
+      }
+
+      set return( value ) {
+        this.setAttribute( 'data-return', value );
+      }
+
+      get return() {
+        return this.getAttribute( 'data-return' ) == 'true' ? true : false;
+      }
+ 
+      set spinner( value ) {
+        if( value ) {
+          this.$.spinner.style.display = 'block';
+        } else {
+          this.$.spinner.style.display = 'none';
+        }
+      }
+
+      get spiner() {
+        return this.$.spinner.style.display == 'block' ? true : false;
+      }
+
+      set type( value ) {
+        this.$.field.type = value;
+      }
+
+      get type() {
+        return this.$.field.type;
+      }
+
+      set value( content ) {
+        this.$.field.value = content;
+      }
+
+      get value() {
+        return this.$.field.value;
+      }
+
+      focus() {
+        this.$.field.focus();
+      }
+
+      onBlur( evt ) {
+        this.$.label.classList.remove( 'selected' );        
+        this.$.divider.classList.remove( 'selected' );
+      }
+
+      onFocus( evt ) {
+        this.$.label.classList.add( 'selected' );        
+        this.$.divider.classList.add( 'selected' );
+      }
+
+      onKey( evt ) {
+        if( evt.keyCode == 13 && this.return ) {
+          this.dispatchEvent( new CustomEvent( TextField.ENTER, {
+            detail: {
+              value: this.value
+            }
+          } ) );         
+        }
+      }
+    }
+
+    TextField.ENTER = 'textfield_enter';
+
+    customElements.define( TextField.is, TextField );    
+  </script>
+</dom-module>

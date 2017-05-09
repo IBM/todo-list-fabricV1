@@ -1,0 +1,37 @@
+{
+  "name": "toodles",
+  "version": "1.0.0",
+  "description": "A demonstration Node.js web application on Hyperledger Fabric.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "async": "0.9.*",
+    "body-parser": "^1.17.1",
+    "compression": "1.6.*",
+    "cookie-parser": "1.4.*",
+    "cors": "2.8.*",
+    "express": "^4.15.2",
+    "express-session": "1.14.*",
+    "fabric-ca-client": "file:./fabric-ca-client",
+    "fabric-client": "file:./fabric-client",
+    "grpc": "1.1.2",
+    "json-parser": "^1.1.5",
+    "pug": "2.0.0-beta11",
+    "serve-static": "1.11.*",
+    "util": "^0.10.3",
+    "winston": "2.2.*"
+  },
+  "engines": {
+    "node": "^6.2.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-sass": "*",
+    "gulp-concat": "*",
+    "gulp-clean-css": "*",
+    "gulp-rename": "*"
+  },
+  "license": "Apache-2.0"
+}

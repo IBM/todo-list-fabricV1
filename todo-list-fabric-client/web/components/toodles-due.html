@@ -1,0 +1,124 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-due">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: row;
+      }
+
+      input {
+        background: none;
+        border: none;
+        color: rgba( 0, 0, 0, 0.87 );   
+        flex-grow: 1;
+        font-size: 14px;  
+        line-height: 48px;
+        margin: 0;
+        outline: 0;
+        padding: 0;        
+      }
+
+      .icon {
+        background-image: url( /img/event.black.svg );
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 24px;
+        height: 48px;
+        opacity: 0.54;
+        width: 48px;
+      }
+    </style>
+    <div class="icon"></div>
+    <input 
+      id="field" 
+      on-blur="onBlur" 
+      placeholder="Due Date" 
+      data-value="0" 
+      on-keypress="onPress">
+  </template>
+  <script>
+    class Due extends Polymer.Element {  
+      static get is() { return 'toodles-due' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.xhr = new XMLHttpRequest();
+        this.xhr.addEventListener( 'load', evt => this.doLoad( evt ) );
+      }
+
+      set value( content ) {
+        this.$.field.setAttribute( 'data-value', content );
+
+        if( content == 0 ) {
+          this.$.field.value = '';
+        } else {
+          let when = new Date( content );
+
+          when.setHours( 0 );
+          when.setMinutes( 0 );
+          when.setSeconds( 0 );
+          when.setMilliseconds( 0 );
+
+          this.$.field.value = moment( when ).format( 'MMM D, YYYY' );
+        }
+      }
+
+      get value() {
+        return parseInt( this.$.field.getAttribute( 'data-value' ) );
+      }
+
+      send() {
+        let url = Due.NATTY_URL + '?value=' + this.$.field.value;
+        this.xhr.open( 'GET', url, true );
+        this.xhr.send( null );        
+      }
+
+      onBlur( evt ) {
+        if( this.$.field.value.trim().length == 0 ) {
+          this.value = 0;
+
+          this.dispatchEvent( new CustomEvent( Due.CHANGE, {
+            detail: {
+              due: 0
+            }
+          } ) );                   
+        } else {
+          this.send();
+        }
+      }
+
+      doLoad( evt ) {
+        let data = JSON.parse( this.xhr.responseText );
+        let result = new Date( data.dates[0] );
+
+        result.setHours( 0 );
+        result.setMinutes( 0 );
+        result.setSeconds( 0 );
+        result.setMilliseconds( 0 );
+
+        if( result.getTime() != this.value ) {
+          this.dispatchEvent( new CustomEvent( Due.CHANGE, {
+            detail: {
+              due: result.getTime()
+            }
+          } ) );         
+        }
+
+        this.value = result.getTime();                
+      }
+
+      onPress( evt ) {
+        if( evt.keyCode == 13 ) {
+          this.send();
+        }        
+      }
+    }
+
+    Due.CHANGE = 'due_change';
+    Due.NATTY_URL = 'https://openwhisk.ng.bluemix.net/api/v1/experimental/web/krhoyt@us.ibm.com_dev/util/natty.json/body'
+
+    customElements.define( Due.is, Due );    
+  </script>
+</dom-module>

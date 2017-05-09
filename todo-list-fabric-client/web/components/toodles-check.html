@@ -1,0 +1,72 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+
+<dom-module id="toodles-check">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-direction: row;
+        height: 40px;
+        justify-content: center;
+      }
+
+      #check {
+        background-image: url( /img/check.box.outline.black.svg );
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: 20px;        
+        height: 40px;
+        width: 20px;
+      }
+
+      #check.selected {
+        background-image: url( /img/check.box.color.svg );        
+      }
+
+      .label {
+        color: rgba( 0, 0, 0, 0.84 );
+        cursor: default;
+        flex-grow: 1;
+        font-size: 13px;
+        height: 40px;
+        line-height: 40px;
+        margin: 0;
+        padding: 0 0 0 8px;
+      }
+    </style>
+    <div id="check" on-click="onCheck"></div>
+    <p id="label" class="label" on-click="onCheck"></p>
+  </template>
+  <script>
+    class CheckBox extends Polymer.Element {  
+      static get is() { return 'toodles-check' }
+
+      connectedCallback() {
+        super.connectedCallback();
+        
+        this.selected = false;
+        this.label = 'Label';
+      }
+
+      set label( value ) {
+        this.$.label.innerHTML = value;
+      }
+
+      get label() {
+        return this.$.label.innerHTML;
+      }
+
+      onCheck( evt ) {
+        if( this.selected ) {
+          this.$.check.classList.remove( 'selected' );
+          this.selected = false;
+        } else {
+          this.$.check.classList.add( 'selected' );
+          this.selected = true;
+        }
+      }
+    }
+
+    customElements.define( CheckBox.is, CheckBox );    
+  </script>
+</dom-module>
