@@ -108,7 +108,7 @@ app.post('/chaincode', function(req, res) {
 		func: values.ctorMsg.function,
 		args: values.ctorMsg.args
 	};
-	logger.debug("Query parameters : "options);
+	logger.debug("Query parameters : "+options);
 	if(data.method.includes('invoke')){
 	toodles_lib.invoke_function(options,function (err, resp) {
 		logger.debug("Results from invoke_function invoke_cc: ");

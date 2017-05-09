@@ -70,8 +70,8 @@ module.exports = function (g_options, logger) {
 
 			// Check Response
 			var request = common.check_proposal_res(results, options.endorsed_hook);
-			console.log("Results from sendTransactionProposal invoke_cc: "+ request);
-			console.log(util.inspect(request, {showHidden: false, depth: null}));
+			//console.log("Results from sendTransactionProposal invoke_cc: "+ request);
+			//console.log(util.inspect(request, {showHidden: false, depth: null}));
 			return chain.sendTransaction(request);
 		}).then(function (response) {
 			// All good
@@ -80,7 +80,7 @@ module.exports = function (g_options, logger) {
 
 				// Call optional order hook
 				if (options.ordered_hook) options.ordered_hook(null, request.txId.toString());
-				console.log("options.ordered_hook");
+				//console.log("options.ordered_hook");
 				// ------- [A] Use Event for Tx Confirmation ------- // option A
 				if (options.event_url) {
 					try {
@@ -125,9 +125,9 @@ module.exports = function (g_options, logger) {
 					// ------- [B] Wait xxxx ms for Block  ------- // option B
 				} else {
 					setTimeout(function () {
-						console.log("Response from invoke_cc:");
-						console.log(util.inspect(response, {showHidden: false, depth: null}));
-						console.log("REsponse from invoke_cc:  done");
+						//console.log("Response from invoke_cc:");
+						//console.log(util.inspect(response, {showHidden: false, depth: null}));
+						//console.log("REsponse from invoke_cc:  done");
 						if (cb) return cb(null,response);
 						else return response;
 					}, g_options.block_delay + 2000);
