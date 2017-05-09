@@ -6,7 +6,7 @@ This project is focused on helping a developer to migrate from Hyperledger Fabri
 The to-do list application presented here is designed to help developers understand how common transactions needed by business processes can be adapted to use Blockchain. Blockchain != Bitcoin. It might be said that Bitcoin is the first Blockchain application. As a distributed ledger, the distinct characteristics such as decentralization, consensus, and encryption have broad-reaching implications to many business verticals including finance, transportation, health care, and others.
 
 ## Application Communication Workflow
-![To-do login screen](todo-list-fabric-client/assets/comm_flow.png)
+![To-do login screen](todo-list-fabric-client/assets/comm_flow_image.png)
 
 * User will interact with the Todos client application, in their browser.
 * When the user performs any action, the client application calls the server application API where the registered admin interacts with the Hyperledger Blockchain Network.
