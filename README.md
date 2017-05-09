@@ -117,8 +117,7 @@ rm -rf fabric-sdk-node/test/fixtures/src/github.com/example_cc/*
 
 Now copy the todo list chaincode to the same folder:
 ```bash
-cp todo-list-fabric-server/chaincode/*
-fabric-sdk-node/test/fixtures/src/github.com/example_cc/
+cp todo-list-fabric-server/chaincode/* fabric-sdk-node/test/fixtures/src/github.com/example_cc/
 ```
 > **Note:** If you want to run your own code on hyperledger fabric V1, just copy the chaincode code in fabric-sdk-node/test/fixtures/src/github.com/example_cc directory.
 
@@ -271,7 +270,7 @@ php -S localhost:8081
 On windows, you can use [XAMPP](https://www.apachefriends.org/index.html)
 # 7. Using the todo list application
 
-With the web application loaded into the browser, you will first be presented with a login screen. The login dialog contains an IBM logo. Alt+Click on that logo to preload data into the blockchain. The only indication that this operation has been completed is a transaction ID in the developer console.
+Use the link `http://localhost:8081` to load the web application in browser. You will be presented with a login screen. The login dialog contains an IBM logo. Alt+Click on that logo to preload data into the blockchain. The only indication that this operation has been completed is a transaction ID in the developer console.
 
 > While not extremely verbose, transaction IDs from IBM Blockchain are presented in the developer console of the browser for every change made at the blockchain itself. It may be useful to have the developer console open when you are using the to-do list application.
 
