@@ -1,4 +1,4 @@
-#  Implementing Common Transactions on IBM Blockchain - Hyperledger Fabric V1.
+#  Implementing Common Transactions on IBM Blockchain - Hyperledger Fabric V1
 
 This project is focused on helping a developer to migrate from Hyperledger Fabric V.6 to V1. It shows how to perform traditional data store transactions on IBM Blockchain. This surfaces as a web-based, to-do list application, allowing browse, read, edit, add, and delete (BREAD) operations.
 
@@ -260,14 +260,15 @@ You should see the following response:
 
 In a new terminal, navigate to the root of the `todo-list-fabric-client/web` directory.
 
-In order for the web-based to-do list application to work, it must be run from a web server. This server does not need to be publicly available in order for the application to function. On Mac, a common approach is to use the built-in PHP installation to run an in-place web server.
+In order for the web-based to-do list application to work, it must be run from a web server. This server does not need to be publicly available in order for the application to function.
 
+On Mac, a common approach is to use the built-in PHP installation to run an in-place web server.
 Run the PHP web server:
 ```bash
 php -S localhost:8081
 ```
 
-
+On windows, you can use [XAMPP](https://www.apachefriends.org/index.html)
 # 7. Using the todo list application
 
 With the web application loaded into the browser, you will first be presented with a login screen. The login dialog contains an IBM logo. Alt+Click on that logo to preload data into the blockchain. The only indication that this operation has been completed is a transaction ID in the developer console.
