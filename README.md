@@ -283,7 +283,7 @@ Following is a list of additional blockchain resources:
 * [Hyperledger Fabric Documentation](http://fabric-rtd.readthedocs.io/en/latest/getting_started.html)
 * [Hyperledger Fabric code on GitHub](https://github.com/hyperledger/fabric)
 * [Hyperledger Fabric Composer](https://hyperledger.github.io/composer/)
-
+* [How to migrate your Fabric v0.6-based chaincode to run on the latest Fabric v1.0](https://developer.ibm.com/blockchain/2017/03/17/migrate-fabric-v0-6-based-chaincode-run-latest-fabric-v1-0/)
 
 # Troubleshooting
 
@@ -301,7 +301,7 @@ rm -rf ~/.hfc-key-store
 * The developer console in the browser is your key to troubleshooting any problems that may arise while running the client application. The first place to look for errors is in checking the values of the chaincode ID and url in the "/web/script/blockchain.js" file.
 
 # References
-* This example is based on to-do list application using Hyperledger Fabric V0.6. [Hyperledger Fabric V0.6](https://github.com/IBM/todo-list-fabric).
+* This example is based on to-do list application using Hyperledger Fabric V0.6 [Hyperledger Fabric V0.6](https://github.com/IBM/todo-list-fabric).
 
 # License
 [Apache 2.0](LICENSE)
