@@ -300,5 +300,8 @@ rm -rf ~/.hfc-key-store
 
 * The developer console in the browser is your key to troubleshooting any problems that may arise while running the client application. The first place to look for errors is in checking the values of the chaincode ID and url in the "/web/script/blockchain.js" file.
 
+# References
+* This example is based on to-do list application using Hyperledger Fabric V0.6. [Hyperledger Fabric V0.6](https://github.com/IBM/todo-list-fabric).
+
 # License
 [Apache 2.0](LICENSE)
