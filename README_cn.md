@@ -28,12 +28,19 @@
 ## 步骤
 
 1.[下载 Docker 映像并获取 hyperledger fabric V1 node sdk 的代码](#1-download-the-docker-images-and-get-the-code-for-hyperledger-fabric-v1-node-sdk)
+
 2.[编辑配置](#2-edit-the-configuration)
+
 3.[启动您的网络](#3-start-your-network)
+
 4.[使用 Node SDK](#4-use-the-node-sdk)
+
 5.[运行待办事项列表 fabric 服务器](#5-run-the-todo-list-fabric-server)
+
 6.[运行待办事项列表 fabric 客户端](#6-run-the-todo-list-fabric-client)
+
 7.[使用待办事项列表应用程序](#7-run-the-todo-list-application)
+
 
 # 1.下载 Docker 映像并获取 hyperledger fabric V1 node sdk 的代码
 
