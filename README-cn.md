@@ -1,3 +1,4 @@
+*阅读本文的其他语言版本：[English](README.md)。*
 #  在 IBM 区块链 Hyperledger Fabric V1 上实现常见交易
 
 本项目致力于帮助开发人员从 Hyperledger Fabric V.6 迁移到 V1。本项目将介绍如何在 IBM 区块链上执行传统的数据存储交易。从表面上看，本项目是一个基于 Web 的待办事项列表应用程序，允许执行浏览、读取、编辑、添加和删除 (BREAD) 操作。
