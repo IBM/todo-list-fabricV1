@@ -1,3 +1,5 @@
+
+*Read this in other languages: [中国](README-cn.md).*
 #  Implementing Common Transactions on IBM Blockchain - Hyperledger Fabric V1
 
 This project is focused on helping a developer to migrate from Hyperledger Fabric V.6 to V1. It shows how to perform traditional data store transactions on IBM Blockchain. This surfaces as a web-based, to-do list application, allowing browse, read, edit, add, and delete (BREAD) operations.
