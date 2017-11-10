@@ -18,7 +18,7 @@ repositories.
 
 The project maintainers use LGTM (Looks Good To Me) in comments on the code
 review to indicate acceptance. A change requires LGTMs from two of the members
-of the [watson-journey-dev-admins](https://github.com/orgs/IBM/teams/watson-journey-dev-admins)
+of the [cda-journey-dev-admins](https://github.com/orgs/IBM/teams/cda-journey-dev-admins)
 team. If the code is written by a member, the change only requires one more
 LGTM.
 

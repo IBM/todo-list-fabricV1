@@ -23,7 +23,6 @@ The to-do list application presented here is designed to help developers underst
 * [Docker](https://www.docker.com/products/overview) - v1.13 or higher
 * [Docker Compose](https://docs.docker.com/compose/overview/) - v1.8 or higher
 * [Node.js & npm](https://nodejs.org/en/download/) - node v6.2.0 - v6.10.0 (v7+ not supported); npm comes with your node installation.
-* [xcode](https://developer.apple.com/xcode/) - only required for OS X users
 * [nvm](https://github.com/creationix/nvm/blob/master/README.markdown) - if you want to use the nvm install command to retrieve a node version
 
 
@@ -286,6 +285,19 @@ Following is a list of additional blockchain resources:
 * [Hyperledger Fabric code on GitHub](https://github.com/hyperledger/fabric)
 * [Hyperledger Fabric Composer](https://hyperledger.github.io/composer/)
 * [How to migrate your Fabric v0.6-based chaincode to run on the latest Fabric v1.0](https://developer.ibm.com/blockchain/2017/03/17/migrate-fabric-v0-6-based-chaincode-run-latest-fabric-v1-0/)
+
+# Learn more
+
+* **Artificial Intelligence Journeys:** Enjoyed this Journey? Check out our other [AI Journeys](https://developer.ibm.com/code/technologies/artificial-intelligence/).
+* **Data Analytics Journeys:** Enjoyed this Journey? Check out our other [Data Analytics Journeys](https://developer.ibm.com/code/technologies/data-science/)
+* **AI and Data Journey Playlist:** Bookmark our [playlist](https://www.youtube.com/playlist?list=PLzUbsvIyrNfknNewObx5N7uGZ5FKH0Fde) with all of our Journey videos
+* **With Watson:** Want to take your Watson app to the next level? Looking to utilize Watson Brand assets? [Join the With Watson program](https://www.ibm.com/watson/with-watson/) to leverage exclusive brand, marketing, and tech resources to amplify and accelerate your Watson embedded commercial solution.
+* **Data Science Experience:** Master the art of data science with IBM's [Data Science Experience](https://datascience.ibm.com/)
+* **PowerAI:** Get started or get scaling, faster, with a software distribution for machine learning running on the Enterprise Platform for AI: [IBM Power Systems](https://www.ibm.com/ms-en/marketplace/deep-learning-platform)
+* **Spark on IBM Cloud:** Need a Spark cluster? Create up to 30 Spark executors on IBM Cloud with our [Spark service](https://console.bluemix.net/catalog/services/apache-spark)
+* **Kubernetes on IBM Cloud:** Deliver your apps with the combined the power of [Kubernetes and Docker on IBM Cloud](https://www.ibm.com/cloud-computing/bluemix/containers)
+
+
 
 # Troubleshooting
 
