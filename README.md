@@ -1,4 +1,8 @@
 
+# OBSOLETE: This code pattern is obsolete
+
+> The 3rd party zelle Real Time Payments service is not operational at the moment. This repository will not be updated. We will keep the repository available for folks interested in some of the technical details. 
+
 *Read this in other languages: [中国](README-cn.md).*
 #  Implementing Common Transactions on IBM Blockchain - Hyperledger Fabric V1
 
