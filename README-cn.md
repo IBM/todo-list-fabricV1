@@ -1,4 +1,5 @@
-*阅读本文的其他语言版本：[English](README.md)。*
+
+*阅读本资料的其他语言版本：[English](README.md)。*
 #  在 IBM 区块链 Hyperledger Fabric V1 上实现常见交易
 
 本项目致力于帮助开发人员从 Hyperledger Fabric V.6 迁移到 V1。本项目将介绍如何在 IBM 区块链上执行传统的数据存储交易。从表面上看，本项目是一个基于 Web 的待办事项列表应用程序，允许执行浏览、读取、编辑、添加和删除 (BREAD) 操作。
@@ -20,32 +21,24 @@
 
 * [Go](https://golang.org/) - 最新版本
 * [Docker](https://www.docker.com/products/overview) - V1.13 或更高版本
-* [Docker Compose](https://docs.docker.com/compose/overview/) - V1.8 或更高版本
+* [Docker Compose](https://docs.docker.com/compose/overview/) - v1.8 或更高版本
 * [Node.js & npm](https://nodejs.org/en/download/) - node v6.2.0 - V6.10.0（不支持 V7 及更高版本）；您的 Node 安装中包含 npm。
-* [xcode](https://developer.apple.com/xcode/) - 仅 OS X 用户需要
 * [nvm](https://github.com/creationix/nvm/blob/master/README.markdown) - 如果您想使用 nvm install 命令检索 Node 版本
 
 
 ## 步骤
 
-1. [下载 Docker 映像并获取 hyperledger fabric V1 node sdk 的代码](#1-download-the-docker-images-and-get-the-code-for-hyperledger-fabric-v1-node-sdk)
-
+1. [下载 Docker 镜像并获取 hyperledger fabric V1 node sdk 的代码](#1-download-the-docker-images-and-get-the-code-for-hyperledger-fabric-v1-node-sdk)
 2. [编辑配置](#2-edit-the-configuration)
-
 3. [启动您的网络](#3-start-your-network)
-
 4. [使用 Node SDK](#4-use-the-node-sdk)
-
 5. [运行待办事项列表 fabric 服务器](#5-run-the-todo-list-fabric-server)
-
 6. [运行待办事项列表 fabric 客户端](#6-run-the-todo-list-fabric-client)
-
 7. [使用待办事项列表应用程序](#7-run-the-todo-list-application)
 
+# 1.下载 Docker 镜像并获取 hyperledger fabric V1 node sdk 的代码
 
-# 1.下载 Docker 映像并获取 hyperledger fabric V1 node sdk 的代码
-
-`download-dockerimages.sh` 包含用于下载所需的 Docker 映像的代码，设置运行 Hyperledger Fabric V1 的网络需要这些映像。
+`download-dockerimages.sh` 包含用于下载所需的 Docker 镜像的代码，设置运行 Hyperledger Fabric V1 的网络需要这些映像。
 
 从工作区中，让该 shell 脚本变得可执行：
 
@@ -156,14 +149,14 @@ docker-compose -f docker-compose-networksetup.yaml up -d
 完成上述操作后，发出一个 docker ps 命令来查看目前运行的容器。您会看到以下结果：
 ```bash
 CONTAINER ID        IMAGE                        COMMAND                  CREATED             STATUS                       PORTS                                            NAMES
-e61cf829f171        hyperledger/fabric-peer      "peer node start -..."3 minutes ago       Up 2 minutes           0.0.0.0:7056->7051/tcp, 0.0.0.0:7058->7053/tcp   peer1
-0cc1f5ac24da        hyperledger/fabric-peer      "peer node start -..."3 minutes ago       Up 2 minutes        0.0.0.0:8056->7051/tcp, 0.0.0.0:8058->7053/tcp   peer3
-7ab3106e5076        hyperledger/fabric-peer      "peer node start -..."3 minutes ago       Up 3 minutes        0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0
-2bc5c6606e6c        hyperledger/fabric-peer      "peer node start -..."3 minutes ago       Up 3 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp   peer2
-513be1b46467        hyperledger/fabric-ca        "sh -c 'fabric-ca-..."3 minutes ago       Up 3 minutes        0.0.0.0:8054->7054/tcp                           ca_peerOrg2
+e61cf829f171        hyperledger/fabric-peer      "peer node start -..."   3 minutes ago       Up 2 minutes           0.0.0.0:7056->7051/tcp, 0.0.0.0:7058->7053/tcp   peer1
+0cc1f5ac24da        hyperledger/fabric-peer      "peer node start -..."   3 minutes ago       Up 2 minutes        0.0.0.0:8056->7051/tcp, 0.0.0.0:8058->7053/tcp   peer3
+7ab3106e5076        hyperledger/fabric-peer      "peer node start -..."   3 minutes ago       Up 3 minutes        0.0.0.0:7051->7051/tcp, 0.0.0.0:7053->7053/tcp   peer0
+2bc5c6606e6c        hyperledger/fabric-peer      "peer node start -..."   3 minutes ago       Up 3 minutes        0.0.0.0:8051->7051/tcp, 0.0.0.0:8053->7053/tcp   peer2
+513be1b46467        hyperledger/fabric-ca        "sh -c 'fabric-ca-..."   3 minutes ago       Up 3 minutes        0.0.0.0:8054->7054/tcp                           ca_peerOrg2
 741c363ba34a        hyperledger/fabric-orderer   "orderer"                3 minutes ago       Up 3 minutes        0.0.0.0:7050->7050/tcp                           orderer0
-abaae883eb13        couchdb                      "tini -- /docker-e..."3 minutes ago       Up 3 minutes        0.0.0.0:5984->5984/tcp                           couchdb
-2c2d51fe88c0        hyperledger/fabric-ca        "sh -c 'fabric-ca-..."3 minutes ago       Up 3 minutes        0.0.0.0:7054->7054/tcp                           ca_peerOrg1
+abaae883eb13        couchdb                      "tini -- /docker-e..."   3 minutes ago       Up 3 minutes        0.0.0.0:5984->5984/tcp                           couchdb
+2c2d51fe88c0        hyperledger/fabric-ca        "sh -c 'fabric-ca-..."   3 minutes ago       Up 3 minutes        0.0.0.0:7054->7054/tcp                           ca_peerOrg1
 
 ```
 
@@ -292,6 +285,7 @@ php -S localhost:8081
 * [GitHub 上的 Hyperledger Fabric 代码](https://github.com/hyperledger/fabric)
 * [Hyperledger Fabric Composer](https://hyperledger.github.io/composer/)
 * [如何迁移基于 Fabric V0.6 的链代码以在最新的 Fabric V1.0 上运行](https://developer.ibm.com/blockchain/2017/03/17/migrate-fabric-v0-6-based-chaincode-run-latest-fabric-v1-0/)
+
 
 # 故障排除
 
